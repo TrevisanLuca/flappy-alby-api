@@ -1,5 +1,8 @@
 using FlappyAlby.API.Abstract;
+using FlappyAlby.API.Options;
+using FlappyAlby.API.Readers;
 using FlappyAlby.API.Repository;
+using FlappyAlby.API.Writers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
+builder.Services
+    .AddOptions<ConnectionStringOptions>()
+    .Bind(builder.Configuration.GetSection("ConnectionStrings"))
+    .ValidateDataAnnotations();
+
+builder.Services.AddSingleton<IReader, SQLReader>();
+builder.Services.AddSingleton<IWriter, SQLWriter>();
 builder.Services.AddSingleton<IRankingRepository, RankingRepository>();
 
 var app = builder.Build();
@@ -22,7 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(b => b.AllowAnyOrigin().AllowAnyMethod());
+app.UseCors(b => b.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 
 app.UseHttpsRedirection();
 

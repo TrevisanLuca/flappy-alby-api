@@ -33,7 +33,7 @@ public class RankingController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        _rankingRepository.SaveRanking(player);
+        _rankingRepository.SaveRanking(player);//new PlayerDto("app",new TimeSpan()));
         return Ok();
     }
 }
