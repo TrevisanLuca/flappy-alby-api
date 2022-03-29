@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using FlappyAlby.API.Abstract;
 
 namespace FlappyAlby.API.Controllers;
 
@@ -10,19 +11,18 @@ using DTOs;
 public class RankingController : ControllerBase
 {
    private readonly ILogger<RankingController> _logger;
+    private readonly IRankingRepository _rankingRepository;
 
-    public RankingController(ILogger<RankingController> logger)
+    public RankingController(ILogger<RankingController> logger, IRankingRepository rankingRepository)
     {
         _logger = logger;
+        _rankingRepository = rankingRepository;
     }
 
     [HttpGet]
     public IActionResult Get()
     {
-        var faker = new Faker();
-        var result = Enumerable.Range(1, 5)
-            .Select((index, index1) => new PlayerDto(faker.Name.FirstName(), faker.Date.Timespan(TimeSpan.FromMinutes(5)), index + index1))
-            .OrderBy(player => player.Total);
+        var result = _rankingRepository.GetRanking();
 
         return Ok(result);
     }
@@ -30,6 +30,10 @@ public class RankingController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] PlayerDto player)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        _rankingRepository.SaveRanking(player);
         return Ok();
     }
 }
