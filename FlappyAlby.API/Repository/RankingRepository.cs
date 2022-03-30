@@ -17,22 +17,13 @@ namespace FlappyAlby.API.Repository
             _writer = writer;
         }       
 
-        public async Task<IEnumerable<PlayerDto>> GetRanking()
+        public async Task<IEnumerable<Player>> GetRanking()
         {
             const string query = @"SELECT TOP 10 Name, Total, Id
                                    FROM Score
                                    ORDER BY Total ASC"; 
-            var players = await _reader.QueryTEntityAsync<PlayerDto>(query);
+            var players = await _reader.QueryTEntityAsync<Player>(query);
             return players;
-        }
-
-        public async Task<PlayerDto> GetById(int id)
-        {
-            const string query = @"SELECT Name, Total, Id
-                                   FROM Score
-                                   WHERE Id=@Id";
-            var result = await _reader.QuerySingleTEntityAsync<PlayerDto>(query, new {Id = id});
-            return result;
         }
 
         public async Task<int?> CreatePlayer(PlayerDto player)

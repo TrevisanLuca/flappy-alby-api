@@ -20,10 +20,9 @@ public class RankingController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Get()
+    public async Task<IActionResult> Get()
     {
-        var result = _rankingRepository.GetRanking();
-
+        var result = await _rankingRepository.GetRanking();
         return Ok(result);
     }
     
