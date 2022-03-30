@@ -10,7 +10,10 @@ using Dapper;
 public class SQLReader : IReader
 {
     private readonly string _connectionstring;
-    public SQLReader(IOptions<ConnectionStringOptions> options) => _connectionstring = options.Value.DefaultDatabase;
+    public SQLReader(IOptions<ConnectionStringOptions> options)
+    {
+        _connectionstring = options.Value.DefaultDatabase;
+    }
 
     public async Task<IEnumerable<TEntity>> QueryTEntityAsync<TEntity>(string query) =>
         await new SqlConnection(_connectionstring).QueryAsync<TEntity>(query, commandType: CommandType.Text, commandTimeout: 10);

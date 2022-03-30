@@ -1,4 +1,5 @@
 ﻿namespace FlappyAlby.API.Options;
+
 using System.ComponentModel.DataAnnotations;
 
 public class ConnectionStringOptions

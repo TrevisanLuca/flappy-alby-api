@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace FlappyAlby.API.DTOs;
 
-namespace FlappyAlby.API.DTOs;
+using System.ComponentModel.DataAnnotations;
 
 public record PlayerDto (
     [Required]
