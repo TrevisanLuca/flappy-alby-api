@@ -28,12 +28,22 @@ public class RankingController : ControllerBase
     }
     
     [HttpPost]
-    public IActionResult Post([FromBody] PlayerDto player)
+    public async Task<IActionResult> Post([FromBody] PlayerDto player)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        _rankingRepository.SaveRanking(player);//new PlayerDto("app",new TimeSpan()));
-        return Ok();
+        try
+        {
+            var newPlayerId = await _rankingRepository.CreatePlayer(player);
+
+            return newPlayerId is not null
+                ? Created($"{this.Request.Scheme}://{this.Request.Host}{this.Request.Path}/{newPlayerId}", newPlayerId)
+                : NotFound();
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message, statusCode: StatusCodes.Status500InternalServerError);
+        }
     }
 }

@@ -1,9 +1,11 @@
 ﻿namespace FlappyAlby.API.Abstract;
 
+using FlappyAlby.API.Domain;
 using FlappyAlby.API.DTOs;
 
 public interface IRankingRepository
 {
-    IEnumerable<PlayerDto> GetRanking();
-    void SaveRanking(PlayerDto player);
+    Task<IEnumerable<PlayerDto>> GetRanking();
+    Task<PlayerDto> GetById(int id);
+    Task<int?> CreatePlayer(PlayerDto player);
 }

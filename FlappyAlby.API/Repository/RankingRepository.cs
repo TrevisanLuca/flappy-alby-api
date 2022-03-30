@@ -1,37 +1,49 @@
 ﻿using Bogus;
 using FlappyAlby.API.Abstract;
+using FlappyAlby.API.Domain;
 using FlappyAlby.API.DTOs;
 using System.Collections.Generic;
 
 namespace FlappyAlby.API.Repository
 {
     public class RankingRepository : IRankingRepository
-    {
-        private IEnumerable<PlayerDto> _ranking;
+    {        
+        private readonly IReader _reader;
+        private readonly IWriter _writer;
 
-        public RankingRepository()
+        public RankingRepository(IReader reader, IWriter writer)
+        {         
+            _reader = reader;
+            _writer = writer;
+        }       
+
+        public async Task<IEnumerable<PlayerDto>> GetRanking()
         {
-            _ranking = Initialize();
+            const string query = @"SELECT TOP 10 Name, Total, Id
+                                   FROM Score
+                                   ORDER BY Total ASC"; 
+            var players = await _reader.QueryTEntityAsync<PlayerDto>(query);
+            return players;
         }
 
-        private IEnumerable<PlayerDto> Initialize()
+        public async Task<PlayerDto> GetById(int id)
         {
-            var faker = new Faker();
-            return Enumerable.Range(1, 10)
-                .Select((index, index1) => new PlayerDto(faker.Name.FirstName(), faker.Date.Timespan(TimeSpan.FromMinutes(5)), index + index1))
-                .OrderBy(player => player.Total).ToList();
+            const string query = @"SELECT Name, Total, Id
+                                   FROM Score
+                                   WHERE Id=@Id";
+            var result = await _reader.QuerySingleTEntityAsync<PlayerDto>(query, new {Id = id});
+            return result;
         }
 
-        public IEnumerable<PlayerDto> GetRanking()
+        public async Task<int?> CreatePlayer(PlayerDto player)
         {
-            return _ranking;
-        }
-
-        public void SaveRanking(PlayerDto player)
-        {
-            var temp = _ranking.ToList();
-            temp.Add(player);
-            _ranking = temp.OrderBy(player => player.Total).Take(10);         
+            const string query = @"INSERT 
+                                   INTO Score(Name,Total)
+                                   OUTPUT inserted.Id
+                                   VALUES (@Name,@Total)";
+            var newPlayer = new Player(player.Name, player.Total);
+            var result = await _writer.WriteInDBAsync<Player>(query, newPlayer);
+            return result;
         }
     }
 }
