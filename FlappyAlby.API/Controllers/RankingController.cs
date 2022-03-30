@@ -31,7 +31,7 @@ public class RankingController : ControllerBase
             return BadRequest(ModelState);
         try
         {
-            var newPlayerId = await _rankingRepository.CreatePlayer(player);
+            var newPlayerId = await _rankingRepository.AddPlayer(player);
             return Created($"{this.Request.Scheme}://{this.Request.Host}{this.Request.Path}/{newPlayerId}", newPlayerId);
         }
         catch (Exception e)

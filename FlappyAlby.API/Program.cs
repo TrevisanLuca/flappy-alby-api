@@ -13,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
-builder.Services.AddSingleton<IRankingRepository, RankingRepository>();
+builder.Services.AddScoped<IRankingRepository, RankingRepository>();
 
 builder.Services.AddDbContext<FlappyDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultDatabase")));
 
