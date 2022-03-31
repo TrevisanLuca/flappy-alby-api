@@ -25,14 +25,14 @@ public class RankingController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] PlayerDto player)
+    public async Task<IActionResult> Post([FromBody] RankingDto ranking)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         try
         {
-            var newPlayerId = await _rankingRepository.AddPlayer(player);
-            return Created($"{this.Request.Scheme}://{this.Request.Host}{this.Request.Path}/{newPlayerId}", newPlayerId);
+            var PlayerId = await _rankingRepository.Create(ranking);
+            return Created($"{this.Request.Scheme}://{this.Request.Host}{this.Request.Path}/{PlayerId}", PlayerId);
         }
         catch (Exception e)
         {

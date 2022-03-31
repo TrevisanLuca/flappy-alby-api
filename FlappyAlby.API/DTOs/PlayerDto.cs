@@ -4,7 +4,5 @@ using System.ComponentModel.DataAnnotations;
 
 public record PlayerDto (
     [Required]
-    string Name,
-    [Required]
-    TimeSpan Total
+    string Name
     );
