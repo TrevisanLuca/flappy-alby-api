@@ -23,7 +23,7 @@ public class RankingRepository : IRankingRepository
     public async Task<RankingDto?> GetById(int id)
     {
         var ranking = await _context.Rankings.FindAsync(id);
-        return ranking is null ? null : new RankingDto(ranking.Player.Name, ranking.Total);
+        return ranking is null ? null : new RankingDto(ranking.Player!.Name, ranking.Total);
     }
     public async Task<int> Create(RankingDto ranking)
     {
@@ -36,7 +36,7 @@ public class RankingRepository : IRankingRepository
             await _context.SaveChangesAsync();
         }
 
-        var newRanking = new Ranking((int)player.Id!, player, ranking.Total);
+        var newRanking = new Ranking((int)player.Id!, ranking.Total);
         var dbEntry = await _context.AddAsync(newRanking);
         await _context.SaveChangesAsync();
         return (int)player.Id!;
