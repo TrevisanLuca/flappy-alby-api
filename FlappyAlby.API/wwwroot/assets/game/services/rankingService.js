@@ -21,7 +21,7 @@
         let html = '<ol>';
         for (const player of JSON.parse(response)) {
             let newTotal = player.total.substring(0, 11);
-            html += `<li>${player.name} - ${newTotal}</li>`;
+            html += `<li>${player.playerName} - ${newTotal}</li>`;
         }
         html += '</ol>';
 

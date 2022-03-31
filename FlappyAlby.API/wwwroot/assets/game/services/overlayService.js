@@ -58,6 +58,6 @@
         this.#htmlTitle.innerHTML = 'Game Over!';
         this.#htmlScore.innerHTML = OverlayService.#timesBuilder(stopwatch);
         this.#htmlButton.innerHTML = 'Retry';
-        this.#htmlName.style.display = 'none';
+        this.#htmlName.style.display = 'none';        
     }
 }

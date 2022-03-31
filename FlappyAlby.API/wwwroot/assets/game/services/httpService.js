@@ -20,7 +20,7 @@
 
     post(url, playerTime, playerName) {
         const playerInfo = {
-            "name": playerName,
+            "playerName": playerName,
             "total": playerTime
         };
         let payload = JSON.stringify(playerInfo);

@@ -16,7 +16,9 @@ public class RankingRepository : IRankingRepository
     }
     public async Task<IEnumerable<RankingDto>> GetRanking(int topX)
     {
-        var rankings = await _context.Rankings.OrderBy(r => r.Total).Take(topX).ToListAsync();
+        var rankings = await _context.Rankings
+            .Include(r => r.Player)
+            .OrderBy(r => r.Total).Take(topX).ToListAsync();
         return rankings.Select(r => new RankingDto(r.Player.Name, r.Total));
     }
 
